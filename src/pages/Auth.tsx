@@ -44,7 +44,7 @@ const Auth: React.FC = () => {
 
     const endpoint = isRegister ? "/sign-up" : "/sign-in";
     try {
-      const response = await fetch(`http://localhost:4000/api/user${endpoint}`, {
+      const response = await fetch(`https://iot-be-waved2s-projects.vercel.app/api/user${endpoint}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
