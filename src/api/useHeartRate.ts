@@ -1,17 +1,17 @@
-import { useState } from "react";
-import { HeartRate } from "../types";
+// import { useState } from "react";
+// import { HeartRate } from "../types";
 
-export function useHeartRate() {
-    const [heartRates, setHeartRates] = useState<HeartRate[]>([]);
+// export function useHeartRate() {
+//     const [heartRates, setHeartRates] = useState<HeartRate[]>([]);
 
-    const fetchHeartRateData = async () => {
-        const res = await api.getHeartRates();
-        setHeartRates(res.data);
-    };
+//     const fetchHeartRateData = async () => {
+//         const res = await api.getHeartRates();
+//         setHeartRates(res.data);
+//     };
 
-    useEffect(() => {
-        fetchHeartRateData();
-    }, []);
+//     useEffect(() => {
+//         fetchHeartRateData();
+//     }, []);
 
-    return { heartRates, fetchHeartRateData };
-}
+//     return { heartRates, fetchHeartRateData };
+// }

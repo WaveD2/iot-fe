@@ -1,6 +1,3 @@
-// src/components/Loading.tsx
-import React from 'react'
-
 const Loading = () => {
   return (
     <div style={{

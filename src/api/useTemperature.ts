@@ -1,17 +1,17 @@
-import { useState } from "react";
-import { Temperature } from "../types";
+// import { useState } from "react";
+// import { Temperature } from "../types";
 
-export function useTemperature() {
-    const [temperatures, setTemperatures] = useState<Temperature[]>([]);
+// export function useTemperature() {
+//     const [temperatures, setTemperatures] = useState<Temperature[]>([]);
 
-    const fetchTemperatureData = async () => {
-        const res = await api.getTemperatures();
-        setTemperatures(res.data);
-    };
+//     const fetchTemperatureData = async () => {
+//         const res = await api.getTemperatures();
+//         setTemperatures(res.data);
+//     };
 
-    useEffect(() => {
-        fetchTemperatureData();
-    }, []);
+//     useEffect(() => {
+//         fetchTemperatureData();
+//     }, []);
 
-    return { temperatures, fetchTemperatureData };
-}
+//     return { temperatures, fetchTemperatureData };
+// }
