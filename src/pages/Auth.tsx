@@ -44,10 +44,11 @@ const Auth: React.FC = () => {
 
     const endpoint = isRegister ? "/sign-up" : "/sign-in";
     try {
-      const response = await fetch(`https://iot-be-waved2s-projects.vercel.app/api/user${endpoint}`, {
+      const response = await fetch(`https://iot-waved.vercel.app/api/user${endpoint}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "User-Agent": "PostmanRuntime/7.37.3"
         },
         body: JSON.stringify(form),
       });
