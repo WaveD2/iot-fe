@@ -4,8 +4,8 @@ import { listenToUserChannel } from '../websocket';
 
 export const DashboardPage: React.FC = () => {
   // Simulated user data
-  const user = JSON.parse(localStorage.getItem('user') || "");
-  const accessToken = JSON.parse(localStorage.getItem('accessToken') || "") ;
+  const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || "") : "";
+  const accessToken = localStorage.getItem('accessToken') ?JSON.parse(localStorage.getItem('accessToken') || "") : "";
   
   
   useEffect(() => {
