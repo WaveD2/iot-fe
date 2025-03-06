@@ -44,23 +44,23 @@ const Auth: React.FC = () => {
 
     const endpoint = isRegister ? "/sign-up" : "/sign-in";
     try {
-      const response = await fetch(`https://iot-waved.vercel.app/api/user${endpoint}`, {
+      //https://iot-waved.vercel.app
+      const response = await fetch(`http://localhost:4000/api/user${endpoint}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "User-Agent": "PostmanRuntime/7.37.3"
         },
         body: JSON.stringify(form),
       });
 
       const data = await response.json();
-      console.log("data::",data);
       
       if (data && data?.status == 200) {
         setMessage(isRegister ? "Đăng ký thành công!" : "Đăng nhập thành công!");
         setForm({ email: "", password: "" });  
-        if (data?.data) {
-          localStorage.setItem("user", JSON.stringify(data.data));
+        if (data?.data?.data) {
+          localStorage.setItem("user", JSON.stringify(data.data.data));
+          localStorage.setItem("accessToken", JSON.stringify(data.data.tokens.accessToken.access));
           navigate("/");
         }
       } else {

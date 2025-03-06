@@ -4,15 +4,31 @@ import { listenToUserChannel } from '../websocket';
 
 export const DashboardPage: React.FC = () => {
   // Simulated user data
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
-  useEffect(() => {
-    if(!user) return
-    const cleanup = listenToUserChannel(user.id, (data) => {
-      alert(`chào bạn ${data.email}`);
-    });
+  const user = JSON.parse(localStorage.getItem('user') || "");
+  const accessToken = JSON.parse(localStorage.getItem('accessToken') || "") ;
   
-    return cleanup;  
-  }, [user]);
+  
+  useEffect(() => {
+    console.log("user:::", user);
+    const getHeath =async () => {
+      const response = await fetch(`http://localhost:4000/api/heart?days=2`, {
+         method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${accessToken}`,
+        },
+      });
+
+      console.log("response:::", response)
+    }
+    getHeath()
+       
+    if (user?.id) {
+        listenToUserChannel(user.id, (data) => {
+            console.log("user socket::", data);
+      });
+    }
+  }, [user?.id]);
 
   const userData = {
     heartRateData: [
