@@ -1,6 +1,6 @@
 import Pusher from 'pusher-js';
 
- 
+//https://iot-waved.vercel.app/
 const pusher = new Pusher('d1641eea53e864ddefb2', {
     cluster: 'ap1'
 });

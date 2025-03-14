@@ -45,7 +45,8 @@ const Auth: React.FC = () => {
     const endpoint = isRegister ? "/sign-up" : "/sign-in";
     try {
       //https://iot-waved.vercel.app
-      const response = await fetch(`http://localhost:4000/api/user${endpoint}`, {
+      const response = await
+        fetch(`${"https://iot-waved.vercel.app"}/api/user${endpoint}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -64,7 +65,7 @@ const Auth: React.FC = () => {
           navigate("/");
         }
       } else {
-        setMessage(data.message || "Có lỗi xảy ra!");
+        setMessage(data.data.message || "Có lỗi xảy ra!");
       }
     } catch (error) {
       console.log("error:::",error);

@@ -9,9 +9,9 @@ export const DashboardPage: React.FC = () => {
   
   
   useEffect(() => {
-    console.log("user:::", user);
-    const getHeath =async () => {
-      const response = await fetch(`http://localhost:4000/api/heart?days=2`, {
+    console.log("process.env.API_SERVER:::", process.env.API_SERVER);
+    const getHeath = async () => {
+      const response = await fetch(`${"https://iot-waved.vercel.app"}/api/heart?days=2`, {
          method: "GET",
         headers: {
           "Content-Type": "application/json",
