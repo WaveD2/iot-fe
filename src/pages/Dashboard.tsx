@@ -9,7 +9,7 @@ export const DashboardPage: React.FC = () => {
   
   
   useEffect(() => {
-    console.log("process.env.API_SERVER:::", process.env.API_SERVER);
+  
     const getHeath = async () => {
       const response = await fetch(`${"https://iot-waved.vercel.app"}/api/heart?days=2`, {
          method: "GET",
@@ -22,13 +22,10 @@ export const DashboardPage: React.FC = () => {
       console.log("response:::", response)
     }
     getHeath()
-       
-    if (user?.id) {
-        listenToUserChannel(user.id, (data) => {
-            console.log("user socket::", data);
-      });
-    }
-  }, [user?.id]);
+    listenToUserChannel((data) => {
+           console.log("data by socket::", data);
+    });
+  }, []);
 
   const userData = {
     heartRateData: [

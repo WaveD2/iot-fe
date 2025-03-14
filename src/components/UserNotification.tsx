@@ -9,8 +9,8 @@ interface Props {
 const UserNotification: React.FC<Props> = ({ userId }) => {
     const [user, setUser] = React.useState<User>();
     useEffect(() => {
-        const cleanup = listenToUserChannel(userId, (data) => {
-            console.log(`📩 Có thông báo mới từ BE: ${data}`);
+        const cleanup = listenToUserChannel((data) => {
+            console.log(` Có thông báo mới từ BE: ${data}`);
             setUser(data);
         });
 
