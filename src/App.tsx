@@ -4,7 +4,7 @@ import Loading from './components/Loading'
 import Auth from './pages/Auth'
 import ProtectedRoute from './router/Protected'
 import Error from './pages/Error'
-import { DashboardPage } from './pages/Dashboard'
+import Dashboard from './pages/Chart'
 
 function App() {
   return (
@@ -13,7 +13,7 @@ function App() {
         <Routes>
           <Route path='/auth' element={<Auth />} />
           <Route path='/' element={<ProtectedRoute />}>
-            <Route path='/' element={<DashboardPage />}></Route>
+            <Route path='/' element={<Dashboard />}></Route>
           </Route>
           <Route path='*' element={<Error />} />
         </Routes>

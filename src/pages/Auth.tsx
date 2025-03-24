@@ -44,9 +44,8 @@ const Auth: React.FC = () => {
 
     const endpoint = isRegister ? "/sign-up" : "/sign-in";
     try {
-      //https://iot-waved.vercel.app
       const response = await
-        fetch(`${"https://iot-waved.vercel.app"}/api/user${endpoint}`, {
+        fetch(`${import.meta.env.VITE_API_SERVER}/user${endpoint}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -60,12 +59,12 @@ const Auth: React.FC = () => {
         setMessage(isRegister ? "Đăng ký thành công!" : "Đăng nhập thành công!");
         setForm({ email: "", password: "" });  
         if (data?.data?.data) {
-          localStorage.setItem("user", JSON.stringify(data.data.data));
-          localStorage.setItem("accessToken", JSON.stringify(data.data.tokens.accessToken.access));
+          localStorage.setItem("user", JSON.stringify(data?.data?.data));
+          localStorage.setItem("accessToken", JSON.stringify(data?.data.tokens.accessToken.access));
           navigate("/");
         }
       } else {
-        setMessage(data.data.message || "Có lỗi xảy ra!");
+        setMessage(data.message || data.data.message || "Có lỗi xảy ra!");
       }
     } catch (error) {
       console.log("error:::",error);
