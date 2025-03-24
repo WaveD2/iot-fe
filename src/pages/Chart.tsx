@@ -144,7 +144,7 @@ const Dashboard = () => {
     });
   }, []);
 
-  const heartChartData = useMemo(() => {
+  const heartChartData : any = useMemo(() => {
     const labels = heartData?.map((d) => d.createdAt);
     return {
       labels,
@@ -185,7 +185,7 @@ const Dashboard = () => {
     [temperatureData]
   );
 
-  const chartOptions = useMemo(
+  const chartOptions : any= useMemo(
     () => ({
       responsive: true,
       maintainAspectRatio: false,
@@ -291,7 +291,7 @@ const Dashboard = () => {
               <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500'></div>
             </div>
           ) : (
-            <div className='relative h-64'>
+              <div className='relative h-64'>
               <Line data={heartChartData} options={chartOptions} />
             </div>
           )}
