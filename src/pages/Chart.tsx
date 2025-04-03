@@ -15,6 +15,10 @@ import {
 import "chartjs-adapter-date-fns";
 import {useNavigate} from "react-router-dom";
 import {listenToUserChannel} from "../websocket";
+import { useHelper } from "../hook/useHelper";
+import { HeartData, HeartRateChart, TemperatureChart, TemperatureData } from "./ChartUI";
+
+ChartJS.register(CategoryScale, LinearScale, TimeScale, PointElement, LineElement, Tooltip, Legend);
 
 ChartJS.register(
   LineController,
@@ -28,24 +32,14 @@ ChartJS.register(
   Legend
 );
 
-interface HeartData {
-  _id: string;
-  heartRate: number;
-  sp02: number;
-  createdAt: string;
-}
 
-interface TemperatureData {
-  _id: string;
-  temperature: number;
-  createdAt: string;
-}
 
 interface ApiResponse<T> {
   data: {
     data: T[];
     average: any;
   };
+  type?:any
 }
 
 const Dashboard = () => {
@@ -98,7 +92,10 @@ const Dashboard = () => {
       );
 
       const data: ApiResponse<HeartData> = await response.json();
-      setHeartData(data.data.data);
+      if (data?.type === 'login') {
+        navigate("/auth");
+      }
+      setHeartData(data?.data?.data);
     } finally {
       setHeartLoading(false);
     }
@@ -120,7 +117,7 @@ const Dashboard = () => {
       );
 
       const data: ApiResponse<TemperatureData> = await response.json();
-      setTemperatureData(data.data.data);
+      setTemperatureData(data?.data?.data);
     } finally {
       setTempLoading(false);
     }
@@ -144,74 +141,8 @@ const Dashboard = () => {
     });
   }, []);
 
-  const heartChartData : any = useMemo(() => {
-    const labels = heartData?.map((d) => d.createdAt);
-    return {
-      labels,
-      datasets: [
-        showHeartRate && {
-          label: "Nhịp tim",
-          data: heartData?.map((d) => d.heartRate),
-          borderColor: "rgb(255, 99, 132)",
-          backgroundColor: "rgba(255, 99, 132, 0.5)",
-          tension: 1,
-          fill: false,
-        },
-        showSpO2 && {
-          label: "SpO2",
-          data: heartData?.map((d) => d.sp02),
-          borderColor: "rgb(53, 162, 235)",
-          backgroundColor: "rgba(53, 162, 235, 0.5)",
-          tension: 1,
-          fill: false,
-        },
-      ].filter(Boolean),
-    };
-  }, [heartData, showHeartRate, showSpO2]);
-
-  const temperatureChartData = useMemo(
-    () => ({
-      labels: temperatureData?.map((d) => d.createdAt),
-      datasets: [
-        {
-          label: "Nhiệt độ",
-          data: temperatureData?.map((d) => d.temperature),
-          borderColor: "rgb(75, 192, 192)",
-          backgroundColor: "rgba(75, 192, 192, 0.5)",
-          tension: 0.4,
-        },
-      ],
-    }),
-    [temperatureData]
-  );
-
-  const chartOptions : any= useMemo(
-    () => ({
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        x: {
-          type: "time",
-          time: {
-            unit: "hour",
-            tooltipFormat: "dd/MM/yyyy HH:mm",
-          },
-        },
-        y: {
-          beginAtZero: true,
-        },
-      },
-      plugins: {
-        legend: {
-          position: "top" as const,
-        },
-      },
-    }),
-    []
-  );
 
   const handlerLogout = async () => {
-  
    const response = await fetch("https://smashing-valid-jawfish.ngrok-free.app/api/user/logout", {
       method: "POST",
       headers: {
@@ -228,7 +159,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className='min-h-screen bg-gray-100 p-8'>
+    <div className='h-full p-8'>
       <div className='flex justify-between items-center mb-3'>
         <span className='text-gray-600'>{user?.email}</span>
         <button
@@ -237,9 +168,8 @@ const Dashboard = () => {
           Đăng xuất
         </button>
       </div>
-      <div className='max-w-7xl mx-auto space-y-6'>
-        {/* Heart Rate Section */}
-        <div className='w-full bg-white p-4 rounded-lg shadow-sm'>
+      <div className='max-w-7xl h-full mx-auto space-y-44'>
+        <div className='w-full p-4'>
           <div className='bg-white p-4 mb-4 rounded-lg shadow-sm'>
             <div className='flex gap-4 items-center'>
               <div className='flex-1'>
@@ -285,55 +215,29 @@ const Dashboard = () => {
               </button>
             </div>
           </div>
-
           {heartLoading ? (
             <div className='h-64 flex items-center justify-center'>
               <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500'></div>
             </div>
           ) : (
               <div className='relative h-64'>
-              <Line data={heartChartData} options={chartOptions} />
+                <HeartRateChart
+                  heartData={heartData}
+                  showHeartRate={showHeartRate}
+                  showSpO2={showSpO2}
+                />
             </div>
           )}
         </div>
 
-        {/* Temperature Section */}
-        <div className='w-full bg-white p-4 rounded-lg shadow-sm'>
-          <div className='bg-white p-4 mb-4 rounded-lg shadow-sm'>
-            <div className='flex gap-4 items-center'>
-              <div className='flex-1'>
-                <label className='block text-sm font-medium text-gray-700'>
-                  Ngày bắt đầu
-                </label>
-                <input
-                  type='date'
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                  className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500'
-                />
-              </div>
-              <div className='flex-1'>
-                <label className='block text-sm font-medium text-gray-700'>
-                  Ngày kết thúc
-                </label>
-                <input
-                  type='date'
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                  className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500'
-                />
-              </div>
-            </div>
-          </div>
-          <h2 className='text-xl font-semibold mb-4'>Theo dõi nhiệt độ</h2>
-
+        <div className='w-full p-4'>
           {tempLoading ? (
             <div className='h-64 flex items-center justify-center'>
               <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500'></div>
             </div>
           ) : (
             <div className='relative h-64'>
-              <Line data={temperatureChartData} options={chartOptions} />
+              <TemperatureChart temperatureData={temperatureData} />  
             </div>
           )}
         </div>
