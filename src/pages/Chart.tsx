@@ -1,5 +1,4 @@
-import {useState, useEffect, useMemo, useCallback} from "react";
-import {Line} from "react-chartjs-2";
+import {useState, useEffect,  useCallback} from "react";
 import {
   Chart as ChartJS,
   LineController,
@@ -15,7 +14,6 @@ import {
 import "chartjs-adapter-date-fns";
 import {useNavigate} from "react-router-dom";
 import {listenToUserChannel} from "../websocket";
-import { useHelper } from "../hook/useHelper";
 import { HeartData, HeartRateChart, TemperatureChart, TemperatureData } from "./ChartUI";
 
 ChartJS.register(CategoryScale, LinearScale, TimeScale, PointElement, LineElement, Tooltip, Legend);
@@ -231,6 +229,33 @@ const Dashboard = () => {
         </div>
 
         <div className='w-full p-4'>
+          <div className='bg-white p-4 mb-4 rounded-lg shadow-sm'>
+            <div className='flex gap-4 items-center'>
+              <div className='flex-1'>
+                <label className='block text-sm font-medium text-gray-700'>
+                  Ngày bắt đầu
+                </label>
+                <input
+                  type='date'
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500'
+                />
+              </div>
+              <div className='flex-1'>
+                <label className='block text-sm font-medium text-gray-700'>
+                  Ngày kết thúc
+                </label>
+                <input
+                  type='date'
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500'
+                />
+              </div>
+            </div>
+          </div>
+
           {tempLoading ? (
             <div className='h-64 flex items-center justify-center'>
               <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500'></div>

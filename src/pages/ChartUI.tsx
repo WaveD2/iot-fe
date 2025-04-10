@@ -10,7 +10,7 @@ import {
   Legend,
   Filler,
 } from "chart.js";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useHelper } from "../hook/useHelper";
 
 // Đăng ký các thành phần ChartJS cần thiết
@@ -219,10 +219,8 @@ export interface TemperatureData {
   createdAt: string;
 }
 
-// Hàm xử lý dữ liệu để sử dụng index làm trục X
 const processDataForIndexedDisplay = (data: any[], key: string) => {
   return data.map((item, index) => {
-    // Chuyển đổi giá trị thô thành đối tượng có thông tin bổ sung
     return {
       x: index, // Sử dụng index làm giá trị X
       y: item[key],
@@ -243,15 +241,13 @@ const HeartRateChart = ({
   showHeartRate: boolean;
   showSpO2: boolean;
 }) => {
-  // Thêm state để lưu kích thước của container
-  const [chartHeight, setChartHeight] = useState(400);
+  const chartHeight = 400;
 
   const processedHeartData = useMemo(
     () => (heartData.length > 100 ? useHelper.groupByMinute(heartData) : heartData),
     [heartData]
   );
 
-  // Tạo dữ liệu biểu đồ với định dạng tốt hơn cho việc hiển thị
   const heartChartData = useMemo(
     () => {
       const datasets = [];
@@ -270,7 +266,7 @@ const HeartRateChart = ({
           pointHoverBackgroundColor: '#fff',
           pointHoverBorderColor: CHART_COLORS.heartRate.border,
           pointHoverBorderWidth: 2,
-          order: 1, // Hiển thị đầu tiên
+          order: 1,  
         });
       }
       
@@ -310,6 +306,7 @@ const HeartRateChart = ({
 
   return (
     <div style={{ height: chartHeight, marginBottom: '2rem', boxShadow: '0 4px 8px rgba(0,0,0,0.1)', borderRadius: '8px', padding: '10px' }}>
+      {/* @ts-ignore */}
       <Line data={heartChartData} options={options} />
     </div>
   );
@@ -321,7 +318,6 @@ const TemperatureChart = ({ temperatureData }: { temperatureData: TemperatureDat
     [temperatureData]
   );
 
-  // Xử lý dữ liệu nhiệt độ
   const temperatureChartData = useMemo(
     () => ({
       datasets: [
@@ -356,6 +352,7 @@ const TemperatureChart = ({ temperatureData }: { temperatureData: TemperatureDat
 
   return (
     <div style={{ height: 400, marginBottom: '2rem', boxShadow: '0 4px 8px rgba(0,0,0,0.1)', borderRadius: '8px', padding: '10px' }}>
+      {/* @ts-ignore */}
       <Line data={temperatureChartData} options={options} />
     </div>
   );
