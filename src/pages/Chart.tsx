@@ -30,6 +30,17 @@ ChartJS.register(
   Legend
 );
 
+export type MessHeartT = {
+  avgHeartRate: number
+  avgSpO2: number
+  heartRateNoti: string
+  spO2Noti: string
+}
+
+export type MessTempT = {
+  noti: string
+  temperature: number
+}
 
 
 interface ApiResponse<T> {
@@ -61,7 +72,18 @@ const Dashboard = () => {
   );
 
   const [heartData, setHeartData] = useState<HeartData[]>([]);
+  const [statsHeart, setStatsHeart] = useState<MessHeartT>({
+      avgHeartRate: 0,
+      avgSpO2: 0,
+      heartRateNoti: "Có lỗi xảy ra",
+      spO2Noti: "Có lỗi xảy ra",
+  });
   const [temperatureData, setTemperatureData] = useState<TemperatureData[]>([]);
+
+  const [statsTemperature, setStatsTemperature] = useState<MessTempT>({
+    noti: "Có lỗi xảy ra",
+    temperature: 0
+  });
   const [showHeartRate, setShowHeartRate] = useState(true);
   const [showSpO2, setShowSpO2] = useState(true);
   const [heartLoading, setHeartLoading] = useState(false);
@@ -94,6 +116,7 @@ const Dashboard = () => {
         navigate("/auth");
       }
       setHeartData(data?.data?.data);
+      setStatsHeart(data?.data?.average);
     } finally {
       setHeartLoading(false);
     }
@@ -116,6 +139,7 @@ const Dashboard = () => {
 
       const data: ApiResponse<TemperatureData> = await response.json();
       setTemperatureData(data?.data?.data);
+      setStatsTemperature(data?.data?.average);
     } finally {
       setTempLoading(false);
     }
@@ -220,6 +244,7 @@ const Dashboard = () => {
           ) : (
               <div className='relative h-64'>
                 <HeartRateChart
+                  stats={statsHeart}
                   heartData={heartData}
                   showHeartRate={showHeartRate}
                   showSpO2={showSpO2}
@@ -262,7 +287,7 @@ const Dashboard = () => {
             </div>
           ) : (
             <div className='relative h-64'>
-              <TemperatureChart temperatureData={temperatureData} />  
+              <TemperatureChart temperatureData={temperatureData} stats={statsTemperature} />  
             </div>
           )}
         </div>
