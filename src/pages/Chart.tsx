@@ -75,13 +75,13 @@ const Dashboard = () => {
   const [statsHeart, setStatsHeart] = useState<MessHeartT>({
       avgHeartRate: 0,
       avgSpO2: 0,
-      heartRateNoti: "Có lỗi xảy ra",
-      spO2Noti: "Có lỗi xảy ra",
+      heartRateNoti: "Chưa có dự liệu",
+      spO2Noti: "Chưa có dự liệu",
   });
   const [temperatureData, setTemperatureData] = useState<TemperatureData[]>([]);
 
   const [statsTemperature, setStatsTemperature] = useState<MessTempT>({
-    noti: "Có lỗi xảy ra",
+    noti: "Chưa có dự liệu",
     temperature: 0
   });
   const [showHeartRate, setShowHeartRate] = useState(true);

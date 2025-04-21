@@ -101,13 +101,13 @@ const createChartOptions = (
           yMin !== undefined
             ? yMin
             : Math.min(
-                ...data.map((d: any) => d.temperature || d.heartRate || d.sp02)
+                ...data.map((d: any) => d.temperature || d?.heartRate || d?.sp02)
               ) - 5,
         suggestedMax:
           yMax !== undefined
             ? yMax
             : Math.max(
-                ...data.map((d: any) => d.temperature || d.heartRate || d.sp02)
+                ...data.map((d: any) => d.temperature || d?.heartRate || d?.sp02)
               ) + 5,
         grid: {
           display: true,
@@ -366,7 +366,7 @@ const HeartRateChart = ({
                     ? "red"
                     : "black",
               }}>
-              {stats?.heartRateNoti || "có lỗi xảy ra"}
+              {stats?.heartRateNoti || "Chưa có dự liệu"}
             </span>
           </p>
         </div>
@@ -384,7 +384,7 @@ const HeartRateChart = ({
           <p>
             <span className='font-semibold underline'>Thông báo : </span>
             <span style={{color: stats?.avgSpO2 > 99 ? "red" : "black"}}>
-              {stats?.heartRateNoti || "có lỗi xảy ra"}
+              {stats?.heartRateNoti || "Chưa có dự liệu"}
             </span>
           </p>
         </div>
@@ -476,7 +476,7 @@ const TemperatureChart = ({
                     ? "red"
                     : "black",
               }}>
-              {stats?.noti || "có lỗi xảy ra"}
+              {stats?.noti || "Chưa có dự liệu"}
             </span>
           </p>
         </p>
