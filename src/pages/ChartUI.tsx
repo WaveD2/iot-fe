@@ -13,6 +13,7 @@ import {
 import {useMemo} from "react";
 import {useHelper} from "../hook/useHelper";
 import {MessHeartT, MessTempT} from "./Chart";
+import { trimDecimal } from "../heper";
 
 // Đăng ký các thành phần ChartJS cần thiết
 ChartJS.register(
@@ -353,7 +354,7 @@ const HeartRateChart = ({
                 color:
                   stats?.avgHeartRate > 85 ? "red" : "var(--color-blue-500)",
               }}>
-              {stats?.avgHeartRate || 0}{" "}
+              {trimDecimal(stats?.avgHeartRate  || 0)}{" "}
             </span>
           </p>
           <p>
@@ -372,13 +373,13 @@ const HeartRateChart = ({
         </div>
         <div className='w-full mx-auto text-xl'>
           <p>
-            <span className='font-semibold underline'>sp02 trung bình :</span>
+            <span className='font-semibold underline'>sp02 trung bình : </span>
             <span
               style={{
                 color:
                   stats?.avgHeartRate < 90 ? "var(--color-blue-500)" : "red",
               }}>
-              {stats?.avgSpO2 || 0}
+              {trimDecimal(stats?.avgSpO2  || 0)}
             </span>
           </p>
           <p>
@@ -457,7 +458,7 @@ const TemperatureChart = ({
       }}>
       <div>
         <p>
-          <span className='font-semibold underline'>Nhịp tim trung bình</span> :{" "}
+          <span className='font-semibold underline'>Nhịp tim trung bình </span> :{" "}
           <span
             style={{
               color:
@@ -465,7 +466,7 @@ const TemperatureChart = ({
                   ? "red"
                   : "var(--color-blue-500)",
             }}>
-            {stats?.temperature || 0}{" "}
+            {trimDecimal(stats?.temperature  || 0)}{" "}
           </span>
           <p>
             <span className='font-semibold underline'>Thông báo : </span>

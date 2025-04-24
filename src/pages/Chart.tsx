@@ -183,7 +183,9 @@ const Dashboard = () => {
   return (
     <div className='h-full p-8'>
       <div className='flex justify-between items-center mb-3'>
-        <span className='text-gray-600'>{user?.email}</span>
+        <div className="ml-5 w-max p-4 bg-red-400 rounded-md">
+          <span className='text-white font-semibold'>{user?.email}</span>
+        </div>
         <button
           className='px-4 py-2 bg-red-500 text-white cursor-pointer rounded hover:bg-red-600'
           onClick={handlerLogout}>
@@ -237,11 +239,11 @@ const Dashboard = () => {
               </button>
             </div>
           </div>
-          {heartLoading ? (
+          {/* {heartLoading ? (
             <div className='h-64 flex items-center justify-center'>
               <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500'></div>
             </div>
-          ) : (
+          ) : ( */}
               <div className='relative h-64'>
                 <HeartRateChart
                   stats={statsHeart}
@@ -250,7 +252,7 @@ const Dashboard = () => {
                   showSpO2={showSpO2}
                 />
             </div>
-          )}
+          {/* )} */}
         </div>
 
         <div className='w-full p-4'>
@@ -281,15 +283,16 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {tempLoading ? (
+          {/* {tempLoading ? (
             <div className='h-64 flex items-center justify-center'>
               <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500'></div>
             </div>
-          ) : (
+           (
+          ) : */}
             <div className='relative h-64'>
               <TemperatureChart temperatureData={temperatureData} stats={statsTemperature} />  
             </div>
-          )}
+          {/* )} */}
         </div>
       </div>
     </div>
