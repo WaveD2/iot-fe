@@ -86,8 +86,6 @@ const Dashboard = () => {
   });
   const [showHeartRate, setShowHeartRate] = useState(true);
   const [showSpO2, setShowSpO2] = useState(true);
-  const [heartLoading, setHeartLoading] = useState(false);
-  const [tempLoading, setTempLoading] = useState(false);
 
   const accessToken = localStorage.getItem("accessToken")
     ? JSON.parse(localStorage.getItem("accessToken") || "")
@@ -97,7 +95,6 @@ const Dashboard = () => {
     : "";
 
   const fetchHeartData = useCallback(async () => {
-    setHeartLoading(true);
     try {
       const response = await fetch(
         `https://smashing-valid-jawfish.ngrok-free.app/api/heart?startDate=${startDateHeart}&endDate=${endDateHeart}`,
@@ -117,13 +114,13 @@ const Dashboard = () => {
       }
       setHeartData(data?.data?.data);
       setStatsHeart(data?.data?.average);
-    } finally {
-      setHeartLoading(false);
+    }catch(error) {
+      console.log("error::", error);
     }
+    
   }, [startDateHeart, endDateHeart]);
 
   const fetchTemperatureData = useCallback(async () => {
-    setTempLoading(true);
     try {
       const response = await fetch(
         `https://smashing-valid-jawfish.ngrok-free.app/api/heart/temperature?startDate=${startDate}&endDate=${endDate}`,
@@ -140,8 +137,8 @@ const Dashboard = () => {
       const data: ApiResponse<TemperatureData> = await response.json();
       setTemperatureData(data?.data?.data);
       setStatsTemperature(data?.data?.average);
-    } finally {
-      setTempLoading(false);
+    }catch(error) {
+      console.log("error:: fetchTemperatureData", error);
     }
   }, [startDate, endDate]);
 
@@ -239,11 +236,6 @@ const Dashboard = () => {
               </button>
             </div>
           </div>
-          {/* {heartLoading ? (
-            <div className='h-64 flex items-center justify-center'>
-              <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500'></div>
-            </div>
-          ) : ( */}
               <div className='relative h-64'>
                 <HeartRateChart
                   stats={statsHeart}
@@ -252,7 +244,6 @@ const Dashboard = () => {
                   showSpO2={showSpO2}
                 />
             </div>
-          {/* )} */}
         </div>
 
         <div className='w-full p-4'>
@@ -282,17 +273,10 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-
-          {/* {tempLoading ? (
-            <div className='h-64 flex items-center justify-center'>
-              <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500'></div>
-            </div>
-           (
-          ) : */}
+ 
             <div className='relative h-64'>
               <TemperatureChart temperatureData={temperatureData} stats={statsTemperature} />  
             </div>
-          {/* )} */}
         </div>
       </div>
     </div>
