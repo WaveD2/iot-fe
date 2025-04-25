@@ -458,7 +458,7 @@ const TemperatureChart = ({
       }}>
       <div>
         <p>
-          <span className='font-semibold underline'>Nhịp tim trung bình </span> :{" "}
+          <span className='font-semibold underline'>Nhiệt độ trung bình </span> :{" "}
           <span
             style={{
               color:
