@@ -344,7 +344,7 @@ const HeartRateChart = ({
     borderRadius: "8px",
     padding: "20px",
     backgroundColor: "#ffffff",
-    paddingBottom: "2rem",
+    paddingBottom: "4rem",
   }}
 >
   <div className="grid grid-cols-2 gap-8">
@@ -478,6 +478,7 @@ const TemperatureChart = ({
       borderRadius: "8px",
       padding: "20px",
       backgroundColor: "#ffffff",
+      paddingBottom: "4rem",
     }}
   >
     <div className="w-full mb-8">

@@ -192,6 +192,7 @@ const Dashboard = () => {
       <div className='max-w-7xl h-full mx-auto space-y-44'>
         <div className='w-full p-4 mb-6'>
           <div className='bg-white p-4 mb-4 rounded-lg shadow-sm'>
+          <h2 className='text-xl font-semibold underline text-indigo-500 my-3'>Theo dõi nhịp tim & SpO2</h2>
             <div className='flex gap-4 items-center'>
               <div className='flex-1'>
                 <label className='block text-sm font-medium text-gray-700'>
@@ -218,7 +219,6 @@ const Dashboard = () => {
             </div>
           </div>
           <div className='mb-4 flex justify-between items-center'>
-            <h2 className='text-xl font-semibold underline text-indigo-500'>Theo dõi nhịp tim & SpO2</h2>
             <div className='flex gap-2'>
               <button
                 onClick={() => setShowHeartRate(!showHeartRate)}
@@ -246,9 +246,9 @@ const Dashboard = () => {
             </div>
         </div>
 
-        <div className='w-full p-4'>
-        <h2 className='text-xl font-semibold mt-4 mb-2 block underline text-indigo-500'>Theo dõi nhịp tim & SpO2</h2>
+        <div className='w-full h-full p-4 mt-36'>
           <div className='bg-white p-4 mb-4 rounded-lg shadow-sm'>
+          <h2 className='text-xl font-semibold mt-4 mb-2 block underline text-indigo-500'>Theo dõi nhiệt độ</h2>
             <div className='flex gap-4 items-center'>
               <div className='flex-1'>
                 <label className='block text-sm font-medium text-gray-700'>
