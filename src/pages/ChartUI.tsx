@@ -337,62 +337,84 @@ const HeartRateChart = ({
 
   return (
     <div
-      style={{
-        height: chartHeight,
-        marginBottom: "2rem",
-        boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-        borderRadius: "8px",
-        padding: "10px",
-      }}>
-      <div className='flex items-center justify-around px-4'>
-        <div className='w-full mx-auto text-xl'>
-          <p>
-            <span className='font-semibold underline'>Nhịp tim trung bình</span>{" "}
-            :{" "}
-            <span
+  style={{
+    height: chartHeight,
+    marginBottom: "5rem",
+    boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+    borderRadius: "8px",
+    padding: "20px",
+    backgroundColor: "#ffffff",
+    paddingBottom: "2rem",
+  }}
+>
+  <div className="grid grid-cols-2 gap-8">
+    {/* Heart Rate Info */}
+    <div className="w-full">
+      <table className="w-full text-left text-lg">
+        <tbody>
+          <tr className="border-b">
+            <td className="py-2 font-semibold text-gray-700">Nhịp tim trung bình</td>
+            <td
+              className="py-2 font-bold"
               style={{
-                color:
-                  stats?.avgHeartRate > 85 ? "red" : "var(--color-blue-500)",
-              }}>
-              {trimDecimal(stats?.avgHeartRate  || 0)}{" "}
-            </span>
-          </p>
-          <p>
-            {" "}
-            <span className='font-semibold underline'>Thông báo </span> :
-            <span
+                color: stats?.avgHeartRate > 85 ? "#ef4444" : "var(--color-blue-500)",
+              }}
+            >
+              {trimDecimal(stats?.avgHeartRate || 0)}
+            </td>
+          </tr>
+          <tr>
+            <td className="py-2 font-semibold text-gray-700">Thông báo</td>
+            <td
+              className="py-2"
               style={{
                 color:
                   stats?.avgHeartRate > 120 || stats?.avgSpO2 < 50
-                    ? "red"
-                    : "black",
-              }}>
-              {stats?.heartRateNoti || "Chưa có dự liệu"}
-            </span>
-          </p>
-        </div>
-        <div className='w-full mx-auto text-xl'>
-          <p>
-            <span className='font-semibold underline'>sp02 trung bình : </span>
-            <span
-              style={{
-                color:
-                  stats?.avgHeartRate < 90 ? "var(--color-blue-500)" : "red",
-              }}>
-              {trimDecimal(stats?.avgSpO2  || 0)}
-            </span>
-          </p>
-          <p>
-            <span className='font-semibold underline'>Thông báo : </span>
-            <span style={{color: stats?.avgSpO2 > 99 ? "red" : "black"}}>
-              {stats?.heartRateNoti || "Chưa có dự liệu"}
-            </span>
-          </p>
-        </div>
-      </div>
-      {/* @ts-ignore */}
-      <Line data={heartChartData} options={options} />
+                    ? "#ef4444"
+                    : "#374151",
+              }}
+            >
+              {stats?.heartRateNoti || "Chưa có dữ liệu"}
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+
+    {/* SpO2 Info */}
+    <div className="w-full">
+      <table className="w-full text-left text-lg">
+        <tbody>
+          <tr className="border-b">
+            <td className="py-2 font-semibold text-gray-700">SpO2 trung bình</td>
+            <td
+              className="py-2 font-bold"
+              style={{
+                color: stats?.avgSpO2 < 90 ? "var(--color-blue-500)" : "#ef4444",
+              }}
+            >
+              {trimDecimal(stats?.avgSpO2 || 0)}
+            </td>
+          </tr>
+          <tr>
+            <td className="py-2 font-semibold text-gray-700">Thông báo</td>
+            <td
+              className="py-2"
+              style={{
+                color: stats?.avgSpO2 > 99 ? "#ef4444" : "#374151",
+              }}
+            >
+              {stats?.spO2Noti || "Chưa có dữ liệu"}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {/* @ts-ignore */}
+  <Line data={heartChartData} options={options} />
+</div>
   );
 };
 
@@ -449,42 +471,54 @@ const TemperatureChart = ({
 
   return (
     <div
-      style={{
-        height: 400,
-        marginBottom: "2rem",
-        boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-        borderRadius: "8px",
-        padding: "10px",
-      }}>
-      <div>
-        <p>
-          <span className='font-semibold underline'>Nhiệt độ trung bình </span> :{" "}
-          <span
-            style={{
-              color:
-                stats?.temperature > 38 || stats?.temperature < 35
-                  ? "red"
-                  : "var(--color-blue-500)",
-            }}>
-            {trimDecimal(stats?.temperature  || 0)}{" "}
-          </span>
-          <p>
-            <span className='font-semibold underline'>Thông báo : </span>
-            <span
+    style={{
+      height: 400,
+      marginBottom: "2rem",
+      boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+      borderRadius: "8px",
+      padding: "20px",
+      backgroundColor: "#ffffff",
+    }}
+  >
+    <div className="w-full mb-8">
+      <table className="w-full text-left text-lg">
+        <tbody>
+          <tr className="border-b">
+            <td className="py-2 font-semibold text-gray-700">Nhiệt độ trung bình</td>
+            <td
+              className="py-2 font-bold"
               style={{
                 color:
                   stats?.temperature > 38 || stats?.temperature < 35
-                    ? "red"
-                    : "black",
-              }}>
-              {stats?.noti || "Chưa có dự liệu"}
-            </span>
-          </p>
-        </p>
-      </div>
-      {/* @ts-ignore */}
-      <Line data={temperatureChartData} options={options} />
+                    ? "#ef4444"
+                    : "var(--color-blue-500)",
+              }}
+            >
+              {trimDecimal(stats?.temperature || 0)}
+            </td>
+          </tr>
+          <tr>
+            <td className="py-2 font-semibold text-gray-700">Thông báo</td>
+            <td
+              className="py-2"
+              style={{
+                color:
+                  stats?.temperature > 38 || stats?.temperature < 35
+                    ? "#ef4444"
+                    : "#374151",
+              }}
+            >
+              {stats?.noti || "Chưa có dữ liệu"}
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+  
+    {/* @ts-ignore */}
+    <Line data={temperatureChartData} options={options} />
+  </div>
+  
   );
 };
 
