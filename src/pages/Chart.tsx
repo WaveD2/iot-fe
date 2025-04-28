@@ -234,6 +234,8 @@ const Dashboard = () => {
         body: JSON.stringify(settings),
      });
       const data = await response.json();
+      console.log("data::",data);
+      
       setSettings(data.data)
       localStorage.setItem("setting", JSON.stringify(data.data))
       setShowSetting(false);
@@ -278,7 +280,7 @@ const Dashboard = () => {
       {showSetting && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg w-[90%] max-w-md relative">
-            <h2 className="text-xl font-bold mb-4 text-center">Cài đặt ngưỡng cảnh báo</h2>
+            <h2 className="text-xl font-bold mb-4 text-center">Cài đặt ngưỡng an toàn</h2>
 
             {loading ? (
               <div className="text-center py-10">Đang tải dữ liệu...</div>
