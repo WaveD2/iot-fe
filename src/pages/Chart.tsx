@@ -179,17 +179,211 @@ const Dashboard = () => {
     localStorage.removeItem("user");
   };
 
+
+
+  const [showSetting, setShowSetting] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [settings, setSettings] = useState({
+    minTemperature: '',
+    maxTemperature: '',
+    maxHeartRate: '',
+    minHeartRate: '',
+    minSp02: '',
+    maxSp02: '',
+  });
+
+  const fetchSettings = async () => {
+    const setting = localStorage.getItem("setting")
+    if(setting){
+      setSettings(JSON.parse(setting))
+      return;
+    }
+    setLoading(true);
+     try {
+      const response = await fetch("https://smashing-valid-jawfish.ngrok-free.app/api/setting", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${accessToken}`,
+          "ngrok-skip-browser-warning": "69420",
+        },
+     });
+      const data = await response.json();
+      console.log("datadatadata setting::", data);
+      localStorage.setItem("setting", JSON.stringify(data))
+      setSettings(data)
+      setShowSetting(true);
+    } catch (error) {
+      console.error('Failed to fetch settings', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      const response = await fetch("https://smashing-valid-jawfish.ngrok-free.app/api/setting", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${accessToken}`,
+          "ngrok-skip-browser-warning": "69420",
+        },
+        body: JSON.stringify(settings),
+     });
+      const data = await response.json();
+      setSettings(data.data)
+      localStorage.setItem("setting", JSON.stringify(data.data))
+      setShowSetting(false);
+    } catch (error) {
+      console.error('Failed to save settings', error);
+      alert('Cập nhật thất bại!');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setSettings(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+
   return (
     <div className='h-full p-8'>
       <div className='flex justify-between items-center'>
-        <div className="ml-5 w-max p-4 bg-red-400 rounded-md">
-          <span className='text-white font-semibold'>{user?.email}</span>
+      <div className="flex items-center gap-4">
+      <div className="ml-5 w-max p-4 bg-red-400 rounded-md">
+        <span className="text-white font-semibold">{user?.email}</span>
+      </div>
+
+      <button
+        className="px-4 py-2 bg-blue-500 text-white cursor-pointer rounded hover:bg-blue-600"
+        onClick={() => { setShowSetting(true); fetchSettings(); }}>
+        Cài đặt
+      </button>
+
+      <button
+        className="px-4 py-2 bg-red-500 text-white cursor-pointer rounded hover:bg-red-600"
+        onClick={handlerLogout}>
+        Đăng xuất
+      </button>
+
+      {/* Popup Settings */}
+      {showSetting && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg w-[90%] max-w-md relative">
+            <h2 className="text-xl font-bold mb-4 text-center">Cài đặt ngưỡng cảnh báo</h2>
+
+            {loading ? (
+              <div className="text-center py-10">Đang tải dữ liệu...</div>
+            ) : (
+              <div className="flex flex-col gap-4">
+                {/* Temperature */}
+                <div>
+                  <h3 className="text-md font-semibold mb-2">Nhiệt độ (°C)</h3>
+                  <div className="flex gap-2">
+                    <input
+                      type="number"
+                      name="minTemperature"
+                      value={settings.minTemperature}
+                      onChange={handleChange}
+                      className="w-1/2 border rounded p-2"
+                      placeholder="Min (ví dụ 36)"
+                    />
+                    <input
+                      type="number"
+                      name="maxTemperature"
+                      value={settings.maxTemperature}
+                      onChange={handleChange}
+                      className="w-1/2 border rounded p-2"
+                      placeholder="Max (ví dụ 39)"
+                    />
+                  </div>
+                </div>
+
+                {/* Heart Rate */}
+                <div>
+                  <h3 className="text-md font-semibold mb-2">Nhịp tim (bpm)</h3>
+                  <div className="flex gap-2">
+                    <input
+                      type="number"
+                      name="minHeart"
+                      value={settings.minHeartRate}
+                      onChange={handleChange}
+                      className="w-1/2 border rounded p-2"
+                      placeholder="Min (ví dụ 60)"
+                    />
+                    <input
+                      type="number"
+                      name="maxHeart"
+                      value={settings.maxHeartRate}
+                      onChange={handleChange}
+                      className="w-1/2 border rounded p-2"
+                      placeholder="Max (ví dụ 120)"
+                    />
+                  </div>
+                </div>
+
+                {/* SpO2 */}
+                <div>
+                  <h3 className="text-md font-semibold mb-2">SpO₂ (%)</h3>
+                  <div className="flex gap-2">
+                    <input
+                      type="number"
+                      name="minSp02"
+                      value={settings.minSp02}
+                      onChange={handleChange}
+                      className="w-1/2 border rounded p-2"
+                      placeholder="Min (ví dụ 94)"
+                    />
+                    <input
+                      type="number"
+                      name="maxSp02"
+                      value={settings.maxSp02}
+                      onChange={handleChange}
+                      className="w-1/2 border rounded p-2"
+                      placeholder="Max (ví dụ 100)"
+                    />
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="flex justify-end gap-3 mt-6">
+                  <button
+                    className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500"
+                    onClick={() => setShowSetting(false)}
+                    disabled={saving}
+                  >
+                    Hủy
+                  </button>
+                  <button
+                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                    onClick={handleSave}
+                    disabled={saving}
+                  >
+                    {saving ? 'Đang lưu...' : 'Lưu'}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <button
+              onClick={() => setShowSetting(false)}
+              className="absolute top-2 right-2 text-gray-500 hover:text-black"
+            >
+              ✕
+            </button>
+          </div>
         </div>
-        <button
-          className='px-4 py-2 bg-red-500 text-white cursor-pointer rounded hover:bg-red-600'
-          onClick={handlerLogout}>
-          Đăng xuất
-        </button>
+      )}
+    </div>
+        
       </div>
       <div className='max-w-7xl h-full mx-auto space-y-44'>
         <div className='w-full p-4 mb-6'>
