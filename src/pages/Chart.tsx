@@ -143,10 +143,12 @@ const Dashboard = () => {
   }, [startDate, endDate]);
 
   useEffect(() => {
+    if(!accessToken) return;
     fetchTemperatureData();
   }, [fetchTemperatureData]);
 
   useEffect(() => {
+    if(!accessToken) return;
     fetchHeartData();
   }, [fetchHeartData]);
 
