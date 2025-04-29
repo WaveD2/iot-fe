@@ -315,7 +315,7 @@ const Dashboard = () => {
                   <div className="flex gap-2">
                     <input
                       type="number"
-                      name="minHeart"
+                      name="minHeartRate"
                       value={settings.minHeartRate}
                       onChange={handleChange}
                       className="w-1/2 border rounded p-2"
@@ -323,7 +323,7 @@ const Dashboard = () => {
                     />
                     <input
                       type="number"
-                      name="maxHeart"
+                      name="maxHeartRate"
                       value={settings.maxHeartRate}
                       onChange={handleChange}
                       className="w-1/2 border rounded p-2"
