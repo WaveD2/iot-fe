@@ -1,4 +1,4 @@
-export function trimDecimal(num: number, digits = 3): number {
+export function trimDecimal(num: number, digits = 0): number {
     if (num <= 0) return num;
   
     const parts = num.toString().split(".");
