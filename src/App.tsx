@@ -5,6 +5,7 @@ import Auth from './pages/Auth'
 import ProtectedRoute from './router/Protected'
 import Error from './pages/Error'
 import Dashboard from './pages/Chart'
+import ForgotPassword from './pages/ForgotPassword'
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Suspense fallback={<Loading />}>
         <Routes>
           <Route path='/auth' element={<Auth />} />
+          <Route path='/auth/forgot-password' element={<ForgotPassword />} />
           <Route path='/' element={<ProtectedRoute />}>
             <Route path='/' element={<Dashboard />}></Route>
           </Route>
