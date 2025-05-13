@@ -270,8 +270,9 @@ const Dashboard = () => {
 
   return (
     <div className="h-full p-8">
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-4 p-6 ml-5 bg-gradient-to-br from-blue-50 to-gray-100 rounded-md shadow-md hover:shadow-md transition-all duration-200">
+     <div className="max-w-7xl mx-auto space-y-44">
+     <div className="flex justify-between items-center">
+        <div className="flex items-center gap-4 p-6 ml-4 bg-gradient-to-br from-blue-50 to-gray-100 rounded-md shadow-md hover:shadow-md transition-all duration-200">
           <div className="flex items-center bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-200">
             <svg
               className="w-5 h-5 mr-2"
@@ -486,6 +487,7 @@ const Dashboard = () => {
           )}
         </div>
       </div>
+     </div>
       <div className="max-w-7xl h-full mx-auto space-y-44">
         <div className="w-full p-4 mb-6">
           <div className="bg-white p-4 mb-4 rounded-lg shadow-sm">
