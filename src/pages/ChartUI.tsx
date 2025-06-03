@@ -12,7 +12,7 @@ import {
 } from "chart.js";
 import {useMemo} from "react";
 import {useHelper} from "../hook/useHelper";
-import {MessHeartT, MessTempT} from "./Chart";
+import {MessHeartT, MessPPMT, MessTempT} from "./Chart";
 import { trimDecimal } from "../heper";
 
 // Đăng ký các thành phần ChartJS cần thiết
@@ -40,6 +40,10 @@ const CHART_COLORS = {
   temperature: {
     border: "rgb(75, 192, 192)",
     background: "rgba(75, 192, 192, 0.2)",
+  },
+  ppm: {
+    border: "rgb(53, 162, 235)",
+    background: "rgba(53, 162, 235, 0.2)",
   },
 };
 
@@ -102,13 +106,13 @@ const createChartOptions = (
           yMin !== undefined
             ? yMin
             : Math.min(
-                ...data.map((d: any) => d.temperature || d?.heartRate || d?.sp02)
+                ...data.map((d: any) => d.temperature || d?.heartRate || d?.sp02 || d?.ppm)
               ) - 5,
         suggestedMax:
           yMax !== undefined
             ? yMax
             : Math.max(
-                ...data.map((d: any) => d.temperature || d?.heartRate || d?.sp02)
+                ...data.map((d: any) => d.temperature || d?.heartRate || d?.ppm || d?.sp02)
               ) + 5,
         grid: {
           display: true,
@@ -247,6 +251,12 @@ export interface HeartData {
 export interface TemperatureData {
   _id: string;
   temperature: number;
+  createdAt: string;
+}
+
+export interface PPMData {
+  _id: string;
+  ppm: number;
   createdAt: string;
 }
 
@@ -523,4 +533,110 @@ const TemperatureChart = ({
   );
 };
 
-export {HeartRateChart, TemperatureChart};
+
+const PPMChart = ({
+  ppmData,
+  stats,
+}: {
+  ppmData: PPMData[];
+  stats: MessPPMT;
+}) => {
+  const processedPPMData = useMemo(
+    () =>
+      ppmData.length > 100
+        ? useHelper.groupByMinute(ppmData)
+        : ppmData,
+    [ppmData]
+  );
+
+  // Xử lý dữ liệu nhiệt độ
+  const pppChartData = useMemo(
+    () => ({
+      datasets: [
+        {
+          label: "Chất lượng không khí (ppm)",
+          data: processDataForIndexedDisplay(
+            processedPPMData,
+            "ppm"
+          ),
+          borderColor: CHART_COLORS.temperature.border,
+          backgroundColor: CHART_COLORS.temperature.background,
+          fill: true,
+          pointBackgroundColor: CHART_COLORS.temperature.border,
+          borderWidth: 2,
+          pointBorderColor: "#fff",
+          pointHoverBackgroundColor: "#fff",
+          pointHoverBorderColor: CHART_COLORS.temperature.border,
+          pointHoverBorderWidth: 2,
+        },
+      ],
+    }),
+    [processedPPMData]
+  );
+
+  // Tạo các tùy chọn biểu đồ nhiệt độ
+  const options = useMemo(() => {
+    return createChartOptions(
+      processedPPMData,
+      "Biểu đồ theo dõi chất lượng không khí",
+      "Chất lượng không khí (ppm)",
+      34.5, // Nhiệt độ thấp
+      42 // Nhiệt độ cao
+    );
+  }, [processedPPMData]);
+
+  return (
+    <div
+    style={{
+      height: 400,
+      marginBottom: "2rem",
+      boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+      borderRadius: "8px",
+      padding: "20px",
+      backgroundColor: "#ffffff",
+      paddingBottom: "4rem",
+    }}
+  >
+    <div className="w-full mb-8">
+      <table className="w-full text-left text-lg">
+        <tbody>
+          <tr className="border-b">
+            <td className="py-2 font-semibold text-gray-700">Chất lượng không khí trung bình</td>
+            <td
+              className="py-2 font-bold"
+              style={{
+                color:
+                  stats?.ppmRate > 38 || stats?.ppmRate < 35
+                    ? "#ef4444"
+                    : "var(--color-blue-500)",
+              }}
+            >
+              {trimDecimal(stats?.ppmRate || 0)}
+            </td>
+          </tr>
+          <tr>
+            <td className="py-2 font-semibold text-gray-700">Thông báo</td>
+            <td
+              className="py-2"
+              style={{
+                color:
+                  stats?.ppmRate > 38 || stats?.ppmRate < 35
+                    ? "#ef4444"
+                    : "#374151",
+              }}
+            >
+              {stats?.ppmNoti || "Chưa có dữ liệu"}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    {/* @ts-ignore */}
+    <Line data={pppChartData} options={options} />
+  </div>
+  
+  );
+};
+
+export {HeartRateChart, TemperatureChart, PPMChart};

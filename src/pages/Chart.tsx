@@ -19,6 +19,8 @@ import {
   HeartRateChart,
   TemperatureChart,
   TemperatureData,
+  PPMData,
+  PPMChart
 } from "./ChartUI";
 
 ChartJS.register(
@@ -49,6 +51,11 @@ export type MessHeartT = {
   heartRateNoti: string;
   spO2Noti: string;
 };
+
+export type MessPPMT = {
+  ppmRate: number;
+  ppmNoti: string;
+}
 
 export type MessTempT = {
   noti: string;
@@ -83,6 +90,17 @@ const Dashboard = () => {
     new Date().toISOString().split("T")[0]
   );
 
+
+  const [startDatePPM, setStartDatePPM] = useState<string>(
+    new Date(new Date().setDate(new Date().getDate() - 7))
+      .toISOString()
+      .split("T")[0]
+  );
+  const [endDatePPM, setEndDatePPM] = useState<string>(
+    new Date().toISOString().split("T")[0]
+  );
+
+
   const [heartData, setHeartData] = useState<HeartData[]>([]);
   const [statsHeart, setStatsHeart] = useState<MessHeartT>({
     avgHeartRate: 0,
@@ -90,12 +108,23 @@ const Dashboard = () => {
     heartRateNoti: "Chưa có dự liệu",
     spO2Noti: "Chưa có dự liệu",
   });
-  const [temperatureData, setTemperatureData] = useState<TemperatureData[]>([]);
 
+
+
+  const [temperatureData, setTemperatureData] = useState<TemperatureData[]>([]);
   const [statsTemperature, setStatsTemperature] = useState<MessTempT>({
     noti: "Chưa có dự liệu",
     temperature: 0,
   });
+
+
+  const [ppmData, setPpmData] = useState<PPMData[]>([]);
+  const [statsPpm, setStatsPpm] = useState<MessPPMT>({
+    ppmNoti: "Chưa có dự liệu",
+    ppmRate: 0,
+  });
+
+
   const [showHeartRate, setShowHeartRate] = useState(true);
   const [showSpO2, setShowSpO2] = useState(true);
 
@@ -153,6 +182,29 @@ const Dashboard = () => {
     }
   }, [startDate, endDate]);
 
+
+  const fetchPPMData = useCallback(async () => {
+    try {
+      const response = await fetch(
+        `https://smashing-valid-jawfish.ngrok-free.app/api/heart/ppm?startDate=${startDate}&endDate=${endDate}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+            "ngrok-skip-browser-warning": "69420",
+          },
+        }
+      );
+
+      const data: ApiResponse<PPMData> = await response.json();
+      setPpmData(data?.data?.data);
+      setStatsPpm(data?.data?.average);
+    } catch (error) {
+      console.log("error:: fetchPPMData:::", error);
+    }
+  }, [startDate, endDate]);
+
   useEffect(() => {
     if (!accessToken) return;
     fetchTemperatureData();
@@ -163,6 +215,12 @@ const Dashboard = () => {
     fetchHeartData();
   }, [fetchHeartData]);
 
+
+  useEffect(() => {
+    if (!accessToken) return;
+    fetchPPMData();
+  }, [fetchPPMData]);
+
   useEffect(() => {
     listenToUserChannel((data) => {
       if (data.type === "web" && data.title === "heartRate") {
@@ -170,6 +228,9 @@ const Dashboard = () => {
       } else if (data.type === "web" && data.title === "temperature") {
         fetchTemperatureData();
       }
+        else if (data.type === "web" && data.title === "ppmRate") {
+          fetchPPMData();
+        }
     });
   }, []);
 
@@ -201,6 +262,8 @@ const Dashboard = () => {
     minHeartRate: "",
     minSp02: "",
     maxSp02: "",
+    minPPM: "",
+    maxPPM: "",
   });
 
   const fetchSettings = async () => {
@@ -445,6 +508,41 @@ const Dashboard = () => {
                      </div>
                    </div>
            
+
+                  {/* PPM */}
+                  
+                  <div>
+                     <h3 className="text-md font-semibold mb-3 text-gray-700">Chất lượng khí (ppm)</h3>
+                     <div className="flex gap-3">
+                       <div className="relative w-1/2">
+                         <input
+                           type="number"
+                           name="minPPM"
+                           value={settings.minPPM}
+                           onChange={handleChange}
+                           className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                           placeholder="Min (ví dụ 94)"
+                         />
+                         <svg className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                         </svg>
+                       </div>
+                       <div className="relative w-1/2">
+                         <input
+                           type="number"
+                           name="maxPPM"
+                           value={settings.maxPPM}
+                           onChange={handleChange}
+                           className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                           placeholder="Max (ví dụ 100)"
+                         />
+                         <svg className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                         </svg>
+                       </div>
+                     </div>
+                   </div>
+
                    {/* Actions */}
                    <div className="flex justify-end gap-4 mt-8">
                      <button
@@ -488,6 +586,9 @@ const Dashboard = () => {
         </div>
       </div>
      </div>
+
+
+     {/* nhịp tim & SpO2 */}
       <div className="max-w-7xl h-full mx-auto space-y-44">
         <div className="w-full p-4 mb-6">
           <div className="bg-white p-4 mb-4 rounded-lg shadow-sm">
@@ -588,7 +689,49 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-    </div>
+
+
+      {/* không khí môi trường */}
+      <div className="max-w-7xl h-full mx-auto space-y-44 mt-56">
+        <div className="w-full p-4 mb-6">
+          <div className="bg-white p-4 mb-4 rounded-lg shadow-sm">
+            <h2 className="text-xl font-semibold underline text-indigo-500 my-3">
+              Theo dõi chỉ số chất lượng không khí
+            </h2>
+            <div className="flex gap-4 items-center">
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-gray-700">
+                  Ngày bắt đầu
+                </label>
+                <input
+                  type="date"
+                  value={startDatePPM}
+                  onChange={(e) => setStartDatePPM(e.target.value)}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                />
+              </div>
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-gray-700">
+                  Ngày kết thúc
+                </label>
+                <input
+                  type="date"
+                  value={endDatePPM}
+                  onChange={(e) => setEndDatePPM(e.target.value)}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                />
+              </div>
+            </div>
+          </div>
+          </div>
+          <div className="relative h-64">
+            <PPMChart
+              ppmData={ppmData}
+              stats={statsPpm}
+            />
+          </div>
+        </div>
+      </div>
   );
 };
 
