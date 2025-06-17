@@ -22,6 +22,7 @@ import {
   PPMData,
   PPMChart,
 } from "./ChartUI";
+import ChatWidget from "../components/Chat";
 
 ChartJS.register(
   CategoryScale,
@@ -780,6 +781,8 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+
+      <ChatWidget />
     </div>
   );
 };

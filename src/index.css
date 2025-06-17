@@ -1,1 +1,17 @@
 @import "tailwindcss";
+
+body {
+  @apply bg-gray-100 font-sans;
+}
+
+.chat-bubble {
+  @apply rounded-2xl p-3 max-w-[80%] text-sm;
+}
+
+.chat-bubble.user {
+  @apply bg-blue-500 text-white ml-auto rounded-br-none shadow;
+}
+
+.chat-bubble.bot {
+  @apply bg-gray-200 text-gray-800 rounded-bl-none shadow;
+}
