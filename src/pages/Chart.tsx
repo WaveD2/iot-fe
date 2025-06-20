@@ -23,6 +23,9 @@ import {
   PPMChart,
 } from "./ChartUI";
 import ChatWidget from "../components/Chat";
+import { Mic } from 'lucide-react';
+import { VoiceModal } from "./Voice";
+
 
 ChartJS.register(
   CategoryScale,
@@ -86,6 +89,8 @@ const Dashboard = () => {
     ppmNoti: "Chưa có dữ liệu",
     ppmRate: 0,
   });
+
+  const [isModalOpenVoice, setIsModalOpenVoice] = useState(false);
 
   const [activeTab, setActiveTab] = useState<"heart" | "temperature" | "ppm">("heart");
   const [showHeartRate, setShowHeartRate] = useState(true);
@@ -307,6 +312,22 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="flex space-x-4">
+
+          <div>
+        
+              <button
+                onClick={() => setIsModalOpenVoice(true)}
+                className="fixed bottom-20 right-6 w-14 h-14 bg-blue-500 hover:bg-blue-600 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center group hover:scale-105"
+                title="Điều khiển bằng giọng nói"
+              >
+                <Mic className="w-6 h-6 text-white group-hover:scale-110 transition-transform" />
+              </button>
+
+              <VoiceModal 
+                isOpen={isModalOpenVoice} 
+                onClose={() => setIsModalOpenVoice(false)} 
+              />
+            </div>
             <button
               className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition disabled:bg-blue-300 disabled:cursor-not-allowed"
               onClick={() => {
